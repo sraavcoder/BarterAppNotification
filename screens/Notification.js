@@ -17,23 +17,15 @@ export default class NotificationScreen extends Component {
         this.requestRef = null
     }
 
-
-
-
     getNotifications = () => {
         db.collection("AllNotification").where("NotificationStatus", "==", "Unread").where("UserID", "==", this.state.userID).get()
             .then(
                 snapshot => {
                     snapshot.forEach((doc) => {
-
                         var a = doc.data().message;
                         var b = doc.data().itemName;
-
                         var allNotifications = []
-
-                        allNotifications.push(a);
-                        allNotifications.push(b);
-
+                        allNotifications.push({ "itemName": a, "message": b });
                         this.setState({
                             allNotifications: allNotifications,
                             message: allNotifications[0],
@@ -62,11 +54,11 @@ export default class NotificationScreen extends Component {
                     <FlatList
                         keyExtractor={this.keyExtractor}
                         data={this.state.allNotifications}
-                        renderItem={() => (
+                        renderItem={({ item, index }) => (
                             <View style={{ borderBottomWidth: 2, borderColor: '#a5a5a5', }}>
                                 <View style={{ marginLeft: 10 }} >
-                                    <Text style={{ paddingTop: 10, fontSize: 15, paddingBottom: 3 }}>{<b>{this.state.itemName}</b>}</Text>
-                                    <Text style={{ paddingBottom: 3, fontSize: 15 }}>{this.state.message}</Text>
+                                    <Text style={{ paddingTop: 10, fontSize: 15, paddingBottom: 3 }}>{<b>{item.itemName}</b>}</Text>
+                                    <Text style={{ paddingBottom: 3, fontSize: 15 }}>{item.message}</Text>
                                 </View>
 
                             </View>
